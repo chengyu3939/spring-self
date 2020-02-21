@@ -83,7 +83,9 @@ public class AnnotatedBeanDefinitionReader {
 	public AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry, Environment environment) {
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
 		Assert.notNull(environment, "Environment must not be null");
-		this.registry = registry;
+		this.registry = registry;//将registry 组合到reader中。
+
+		//将对应的conditional判断所需的对象列表注入到 condition中
 		this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
 		AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
 	}
@@ -132,6 +134,8 @@ public class AnnotatedBeanDefinitionReader {
 	 * e.g. {@link Configuration @Configuration} classes
 	 */
 	public void register(Class<?>... componentClasses) {
+
+		//循环遍历扫描
 		for (Class<?> componentClass : componentClasses) {
 			registerBean(componentClass);
 		}
@@ -213,18 +217,24 @@ public class AnnotatedBeanDefinitionReader {
 	 */
 	<T> void doRegisterBean(Class<T> beanClass, @Nullable Supplier<T> instanceSupplier, @Nullable String name,
 			@Nullable Class<? extends Annotation>[] qualifiers, BeanDefinitionCustomizer... definitionCustomizers) {
-
+		//将配置类转换成定义类，会提取出其中的注解信息
 		AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(beanClass);
+
+		//根据配置以及其附带的注解判断是否跳过这个配置类
 		if (this.conditionEvaluator.shouldSkip(abd.getMetadata())) {
 			return;
 		}
 
 		abd.setInstanceSupplier(instanceSupplier);
+		//获取当前配置的模式，默认为单例模式
 		ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
 		abd.setScope(scopeMetadata.getScopeName());
+		//为当前bean初始化名称，如果方法有传就使用方法的，没有就解析注解（componet,named等注解中的value字段是否包含），在没有就解析shortClassName.
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
-
+		//解析注解 lazy,primary,DependsOn,Role 等注解到abd中。
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
+
+		// TODO: 2020/2/21 限定符的作用
 		if (qualifiers != null) {
 			for (Class<? extends Annotation> qualifier : qualifiers) {
 				if (Primary.class == qualifier) {
@@ -238,6 +248,8 @@ public class AnnotatedBeanDefinitionReader {
 				}
 			}
 		}
+
+		//后置处理器 作用于回调
 		for (BeanDefinitionCustomizer customizer : definitionCustomizers) {
 			customizer.customize(abd);
 		}
