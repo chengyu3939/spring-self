@@ -16,6 +16,7 @@ dependencies {
     compile(project(":spring-context"))
     compile(project(":spring-core"))
     compile(project(":spring-web"))
+    optional(project(":spring-oxm"))
     compile(project(":spring-instrument"))
     optional(project(":spring-core"))
     optional(project(":spring-messaging"))
