@@ -50,12 +50,12 @@ import org.springframework.util.ClassUtils;
  * @author Chris Beams
  * @author Phillip Webb
  * @author Stephane Nicoll
- * @since 2.5
  * @see ContextAnnotationAutowireCandidateResolver
  * @see ConfigurationClassPostProcessor
  * @see CommonAnnotationBeanPostProcessor
  * @see org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor
  * @see org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor
+ * @since 2.5
  */
 public abstract class AnnotationConfigUtils {
 
@@ -71,6 +71,7 @@ public abstract class AnnotationConfigUtils {
 	 * and {@code AnnotationConfigWebApplicationContext} during bootstrap in order to make
 	 * any custom name generation strategy available to the underlying
 	 * {@link ConfigurationClassPostProcessor}.
+	 *
 	 * @since 3.1.1
 	 */
 	public static final String CONFIGURATION_BEAN_NAME_GENERATOR =
@@ -84,6 +85,7 @@ public abstract class AnnotationConfigUtils {
 
 	/**
 	 * The bean name of the internally managed Required annotation processor.
+	 *
 	 * @deprecated as of 5.1, since no Required processor is registered by default anymore
 	 */
 	@Deprecated
@@ -131,6 +133,7 @@ public abstract class AnnotationConfigUtils {
 
 	/**
 	 * Register all relevant annotation post processors in the given registry.
+	 *
 	 * @param registry the registry to operate on
 	 */
 	public static void registerAnnotationConfigProcessors(BeanDefinitionRegistry registry) {
@@ -139,39 +142,48 @@ public abstract class AnnotationConfigUtils {
 
 	/**
 	 * Register all relevant annotation post processors in the given registry.
+	 *
 	 * @param registry the registry to operate on
-	 * @param source the configuration source element (already extracted)
-	 * that this registration was triggered from. May be {@code null}.
+	 * @param source   the configuration source element (already extracted)
+	 *                 that this registration was triggered from. May be {@code null}.
 	 * @return a Set of BeanDefinitionHolders, containing all bean definitions
 	 * that have actually been registered by this call
 	 */
 	public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(
 			BeanDefinitionRegistry registry, @Nullable Object source) {
 
+		//判断registry的具体形态。获取其真实的bean工厂并返回。
 		DefaultListableBeanFactory beanFactory = unwrapDefaultListableBeanFactory(registry);
 		if (beanFactory != null) {
+			//初始化注解排序比较器 主要解决注解排序功能。 @Order
 			if (!(beanFactory.getDependencyComparator() instanceof AnnotationAwareOrderComparator)) {
 				beanFactory.setDependencyComparator(AnnotationAwareOrderComparator.INSTANCE);
 			}
+			//主要是解决注解的延迟解析功能 @Lazy
 			if (!(beanFactory.getAutowireCandidateResolver() instanceof ContextAnnotationAutowireCandidateResolver)) {
 				beanFactory.setAutowireCandidateResolver(new ContextAnnotationAutowireCandidateResolver());
 			}
 		}
 
-		Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<>(8);
+		//初始化六大内置对象
+		Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<>(8);//此处需要6个单位的存储。但集合以2^n 进行扩容。故此处设置成8
 
+		//配置类的后置处理器
 		if (!registry.containsBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(ConfigurationClassPostProcessor.class);
+			//设置bendefinition的配置元 todo 该配置源是什么含义及作用。此处设置为null
 			def.setSource(source);
 			beanDefs.add(registerPostProcessor(registry, def, CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME));
 		}
 
+		//该处理器主要解决@autowirte/@value 注解的作用。
 		if (!registry.containsBeanDefinition(AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(AutowiredAnnotationBeanPostProcessor.class);
 			def.setSource(source);
 			beanDefs.add(registerPostProcessor(registry, def, AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME));
 		}
 
+		//支持 jsr-250 相关的注解 如@Resource
 		// Check for JSR-250 support, and if present add the CommonAnnotationBeanPostProcessor.
 		if (jsr250Present && !registry.containsBeanDefinition(COMMON_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(CommonAnnotationBeanPostProcessor.class);
@@ -179,14 +191,15 @@ public abstract class AnnotationConfigUtils {
 			beanDefs.add(registerPostProcessor(registry, def, COMMON_ANNOTATION_PROCESSOR_BEAN_NAME));
 		}
 
+		//支持 持久化 jpa相关注解的解析操作
 		// Check for JPA support, and if present add the PersistenceAnnotationBeanPostProcessor.
 		if (jpaPresent && !registry.containsBeanDefinition(PERSISTENCE_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition();
 			try {
+//				此处通过类加载的方式加载人为肯定会存在的class。此方式可以通用解决此类方式。
 				def.setBeanClass(ClassUtils.forName(PERSISTENCE_ANNOTATION_PROCESSOR_CLASS_NAME,
 						AnnotationConfigUtils.class.getClassLoader()));
-			}
-			catch (ClassNotFoundException ex) {
+			} catch (ClassNotFoundException ex) {
 				throw new IllegalStateException(
 						"Cannot load optional framework class: " + PERSISTENCE_ANNOTATION_PROCESSOR_CLASS_NAME, ex);
 			}
@@ -194,12 +207,14 @@ public abstract class AnnotationConfigUtils {
 			beanDefs.add(registerPostProcessor(registry, def, PERSISTENCE_ANNOTATION_PROCESSOR_BEAN_NAME));
 		}
 
+		//次处理器主要解决注解监听器的解析动作 @EventListener
 		if (!registry.containsBeanDefinition(EVENT_LISTENER_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(EventListenerMethodProcessor.class);
 			def.setSource(source);
 			beanDefs.add(registerPostProcessor(registry, def, EVENT_LISTENER_PROCESSOR_BEAN_NAME));
 		}
 
+		//解决监听器相关的监听事件的默认工厂方法。主要是创建监听器 具体使用待持续更新 todo 持续跟进
 		if (!registry.containsBeanDefinition(EVENT_LISTENER_FACTORY_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(DefaultEventListenerFactory.class);
 			def.setSource(source);
@@ -212,20 +227,21 @@ public abstract class AnnotationConfigUtils {
 	private static BeanDefinitionHolder registerPostProcessor(
 			BeanDefinitionRegistry registry, RootBeanDefinition definition, String beanName) {
 
-		definition.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+		definition.setRole(BeanDefinition.ROLE_INFRASTRUCTURE); //此处 ROLE_INFRASTRUCTURE =2 代表该类型的bean为基础设置。（内置的）
 		registry.registerBeanDefinition(beanName, definition);
-		return new BeanDefinitionHolder(definition, beanName);
+		return new BeanDefinitionHolder(definition, beanName);//holder 表示拥有者。不但包括当前对象。还可以包括一些其他的信息。例如 描述/命名等。
 	}
 
 	@Nullable
 	private static DefaultListableBeanFactory unwrapDefaultListableBeanFactory(BeanDefinitionRegistry registry) {
+		//如果以及是默认的bean工厂集合，则直接返回
 		if (registry instanceof DefaultListableBeanFactory) {
 			return (DefaultListableBeanFactory) registry;
 		}
+		//否则如果是 generic 容器。则其中获取工厂对象并返回。
 		else if (registry instanceof GenericApplicationContext) {
 			return ((GenericApplicationContext) registry).getDefaultListableBeanFactory();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -238,8 +254,7 @@ public abstract class AnnotationConfigUtils {
 		AnnotationAttributes lazy = attributesFor(metadata, Lazy.class);
 		if (lazy != null) {
 			abd.setLazyInit(lazy.getBoolean("value"));
-		}
-		else if (abd.getMetadata() != metadata) {
+		} else if (abd.getMetadata() != metadata) {
 			lazy = attributesFor(abd.getMetadata(), Lazy.class);
 			if (lazy != null) {
 				abd.setLazyInit(lazy.getBoolean("value"));
@@ -286,7 +301,7 @@ public abstract class AnnotationConfigUtils {
 	}
 
 	static Set<AnnotationAttributes> attributesForRepeatable(AnnotationMetadata metadata,
-			Class<?> containerClass, Class<?> annotationClass) {
+															 Class<?> containerClass, Class<?> annotationClass) {
 
 		return attributesForRepeatable(metadata, containerClass.getName(), annotationClass.getName());
 	}

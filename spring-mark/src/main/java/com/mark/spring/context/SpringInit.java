@@ -44,7 +44,7 @@ public class SpringInit {
 
 
 
-
+//		ac.registerBean();
 
 	}
 

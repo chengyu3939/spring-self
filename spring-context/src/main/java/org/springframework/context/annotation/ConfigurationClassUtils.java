@@ -71,6 +71,8 @@ abstract class ConfigurationClassUtils {
 
 
 	/**
+	 * 检查该bean定义是否为配置类的一个候选人。或者为一个嵌套类的组件声明在一个配置类中。
+	 *
 	 * Check whether the given bean definition is a candidate for a configuration class
 	 * (or a nested component class declared within a configuration/component class,
 	 * to be auto-registered as well), and mark it accordingly.
@@ -112,9 +114,20 @@ abstract class ConfigurationClassUtils {
 			}
 		}
 
+		//被@configration 标注的类
 		if (isFullConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}
+		//
+
+		/*
+		candidateIndicators.add(Component.class.getName());
+		candidateIndicators.add(ComponentScan.class.getName());
+		candidateIndicators.add(Import.class.getName());
+		candidateIndicators.add(ImportResource.class.getName());
+
+		被其中任何一个标注即为轻量级候选人。
+		*/
 		else if (isLiteConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
 		}

@@ -127,6 +127,7 @@ public class ConventionsTests {
 		Class<String> cls = String.class;
 		String desiredResult = "java.lang.String.foo";
 		assertEquals(desiredResult, Conventions.getQualifiedAttributeName(cls, baseName));
+
 	}
 
 

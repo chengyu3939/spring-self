@@ -34,6 +34,7 @@ public class Spr15275Tests {
 		ApplicationContext context = new AnnotationConfigApplicationContext(ConfigWithFactoryBean.class);
 		assertEquals("x", context.getBean(Bar.class).foo.toString());
 		assertSame(context.getBean(FooInterface.class), context.getBean(Bar.class).foo);
+
 	}
 
 	@Test
