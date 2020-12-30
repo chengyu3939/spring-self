@@ -57,6 +57,11 @@ import org.springframework.util.StringValueResolver;
  * @see org.springframework.context.MessageSourceAware
  * @see org.springframework.context.ApplicationContextAware
  * @see org.springframework.context.support.AbstractApplicationContext#refresh()
+ *
+ * 注释：该处理器可以理解为能力加强处理器。他会为实现了 *Aware 接口的类，自动将对应的能力注入到该bean中。
+ *
+ * 比如 实现了 ApplicationContextAware 的类将会通过其 setApplicationContext 方法将 当前context设置进去
+ *
  */
 class ApplicationContextAwareProcessor implements BeanPostProcessor {
 
@@ -73,7 +78,7 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 		this.embeddedValueResolver = new EmbeddedValueResolver(applicationContext.getBeanFactory());
 	}
 
-
+//
 	@Override
 	@Nullable
 	public Object postProcessBeforeInitialization(final Object bean, String beanName) throws BeansException {
@@ -101,6 +106,7 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 
 	private void invokeAwareInterfaces(Object bean) {
 		if (bean instanceof Aware) {
+			//environment 赋予其环境配置获取的能力。其中包括：profile/properties
 			if (bean instanceof EnvironmentAware) {
 				((EnvironmentAware) bean).setEnvironment(this.applicationContext.getEnvironment());
 			}
@@ -116,6 +122,7 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 			if (bean instanceof MessageSourceAware) {
 				((MessageSourceAware) bean).setMessageSource(this.applicationContext);
 			}
+			//此处应证了 为什么实现ApplicationContextAware 便会自动注入 applicationContext
 			if (bean instanceof ApplicationContextAware) {
 				((ApplicationContextAware) bean).setApplicationContext(this.applicationContext);
 			}

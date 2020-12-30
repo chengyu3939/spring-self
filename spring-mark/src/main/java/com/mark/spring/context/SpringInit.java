@@ -3,6 +3,7 @@ package com.mark.spring.context;
 import com.mark.spring.context.condition.TargetConditionBean;
 import com.mark.spring.context.event.EventPublisher;
 import com.mark.spring.context.event.MonitorEnums;
+import com.mark.spring.context.event.MonitorEvent;
 import com.mark.spring.context.lifecycle.AppConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -25,6 +26,8 @@ public class SpringInit {
 		System.out.println(studentService2);
 		System.out.println(studentService3);
 
+		//ac.publishEvent(new ApplicationEvent(new String("我发布了一个时间！")){});
+//		ac.publishEvent(new MyEvent(new String("我发布了一个时间！")){});
 
 //		studentService.say();
 //		System.out.println("studentService.getClass().getClassLoader() = " + studentService.getClass().getClassLoader());
@@ -34,7 +37,7 @@ public class SpringInit {
 
 
 		//ac.publishEvent(new ApplicationEvent(new String("我发布了一个时间！")){});
-//		ac.publishEvent(new MyEvent(new String("我发布了一个时间！")){});
+		ac.publishEvent(new MonitorEvent(MonitorEnums.POOL_FAIL,"测试发布时间哦！"){});
 
 //		EventPublisher.publisher(MonitorEnums.POOL_FAIL,"22222222");
 

@@ -38,6 +38,11 @@ public class AppConfig implements ApplicationContextAware {
 	}
 
 
+
+
+
+
+
 	@Bean("applicationEventMulticaster")
 	public ApplicationEventMulticaster initMulticaster() {
 		SimpleApplicationEventMulticaster multicaster = new SimpleApplicationEventMulticaster(applicationContext);

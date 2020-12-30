@@ -515,9 +515,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
 			// Prepare this context for refreshing.
-			prepareRefresh();
+			prepareRefresh();//
 
 			// Tell the subclass to refresh the internal bean factory.
+			//该方法将会调用模板方法 refreshBeanFactory 该方法具体实现由子类完成。
+			// annotationConfigApplicationContext 默认实现为控制该方法只被调用一次。多次将会被异常中断
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
@@ -607,6 +609,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		getEnvironment().validateRequiredProperties();
 
 		// Store pre-refresh ApplicationListeners...
+
+		/**
+		 * 将所有的监听器放入到一个早起的集合中
+		 */
 		if (this.earlyApplicationListeners == null) {
 			this.earlyApplicationListeners = new LinkedHashSet<>(this.applicationListeners);
 		}
@@ -653,6 +659,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 
 		// Configure the bean factory with context callbacks.
+
+		/*将ApplicationContextAwareProcessor 设置到bean工厂中。
+		beanPostProcessor 会在每个bean实例化前后分别调用 before/after 方法
+		* 其中 ApplicationContextAwareProcessor
+		*
+		* */
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
