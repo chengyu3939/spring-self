@@ -57,6 +57,10 @@ public class ApplicationContextInit {
 				System.out.println("shutdown hook!!!!!");
 			}
 		});
+
+
+		Object systemProperties = ac.getBean("systemProperties");
+
 		ac.stop();
 
 

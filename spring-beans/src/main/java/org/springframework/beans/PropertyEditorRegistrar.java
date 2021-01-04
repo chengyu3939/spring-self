@@ -30,6 +30,7 @@ package org.springframework.beans;
  * @see PropertyEditorRegistry
  * @see java.beans.PropertyEditor
  */
+//声明一个方法，该方法作为注册/记录配置解析起
 public interface PropertyEditorRegistrar {
 
 	/**
