@@ -57,7 +57,10 @@ import org.springframework.core.io.support.ResourcePatternResolver;
  * @author Juergen Hoeller
  * @author Chris Beams
  * @since 2.0
+ *
+ * todo PropertyEditorRegistrar 理解其运行原理。
  */
+
 public class ResourceEditorRegistrar implements PropertyEditorRegistrar {
 
 	private final PropertyResolver propertyResolver;

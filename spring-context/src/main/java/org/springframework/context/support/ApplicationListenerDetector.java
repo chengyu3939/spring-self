@@ -41,6 +41,9 @@ import org.springframework.util.ObjectUtils;
  *
  * @author Juergen Hoeller
  * @since 4.3.4
+ *
+ *
+ * todo 需要理解 DestructionAwareBeanPostProcessor 以及 MergedBeanDefinitionPostProcessor
  */
 class ApplicationListenerDetector implements DestructionAwareBeanPostProcessor, MergedBeanDefinitionPostProcessor {
 
