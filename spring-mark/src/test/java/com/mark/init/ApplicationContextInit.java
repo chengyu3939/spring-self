@@ -44,7 +44,12 @@ public class ApplicationContextInit {
 
 		ac.registerBean(DemoApplicationContextAware.class);
 		ac.registerBean(StudentService.class);
+
+
+
 		ac.refresh();
+
+		System.out.println("alias :"+Arrays.toString(ac.getAliases("studentService")));
 		DemoApplicationContextAware bean = ac.getBean(DemoApplicationContextAware.class);
 		bean.doSomeThing();
 

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Component
+@Component("testService")
 public class StudentService {
 
 	private static AtomicInteger number=new AtomicInteger(0);

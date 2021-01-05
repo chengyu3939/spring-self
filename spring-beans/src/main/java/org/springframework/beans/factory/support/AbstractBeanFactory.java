@@ -239,6 +239,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
 			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
 
+
+		//判断该名称是否是工厂名，如果是则去掉工厂命名修饰符 &
 		final String beanName = transformedBeanName(name);
 		Object bean;
 
@@ -266,9 +268,13 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 			// Check if bean definition exists in this factory.
 			BeanFactory parentBeanFactory = getParentBeanFactory();
+			//如果存在父子容器，则向父容器查询。
+			//judge ： 父容器存在且不包含当前的bean定义。
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
 				// Not found -> check parent.
 				String nameToLookup = originalBeanName(name);
+
+				//如果父工厂继承了抽象bean工厂 则交由父容器去实例化。
 				if (parentBeanFactory instanceof AbstractBeanFactory) {
 					return ((AbstractBeanFactory) parentBeanFactory).doGetBean(
 							nameToLookup, requiredType, args, typeCheckOnly);
