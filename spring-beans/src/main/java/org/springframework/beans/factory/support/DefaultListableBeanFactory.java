@@ -199,6 +199,9 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 
 	/**
+	 *
+	 *
+	 * 为什么要存储这个 beanfactory。 而且需要通过软引用的方式。
 	 * Specify an id for serialization purposes, allowing this BeanFactory to be
 	 * deserialized from this id back into the BeanFactory object, if needed.
 	 */
