@@ -1723,6 +1723,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * @see RootBeanDefinition#getDependsOn
 	 * @see #registerDisposableBean
 	 * @see #registerDependentBean
+	 *
+	 *
+	 * 需要确认。原型（property）是否确实不可以Disposable
 	 */
 	protected void registerDisposableBeanIfNecessary(String beanName, Object bean, RootBeanDefinition mbd) {
 		AccessControlContext acc = (System.getSecurityManager() != null ? getAccessControlContext() : null);

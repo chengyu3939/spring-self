@@ -173,6 +173,12 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * @param beanName the name of the bean to look for
 	 * @param allowEarlyReference whether early references should be created or not
 	 * @return the registered singleton object, or {@code null} if none found
+	 *
+	 * earlySingletonObject 创建流程
+	 * 从 singletonFactories 获取该bean的 ObjectFactory
+	 * 通过 objectFactory.getObject -> 创建 earlySingletonBean
+	 * 并从singletonFactories 中移除 beanname
+	 *
 	 */
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
