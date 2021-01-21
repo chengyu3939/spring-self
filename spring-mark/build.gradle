@@ -20,6 +20,7 @@ dependencies {
     compile(project(":spring-instrument"))
     optional(project(":spring-core"))
     optional(project(":spring-messaging"))
+    optional(project(":spring-aop"))
 
 //    optional(project(":spring-webmvc"))
 }
