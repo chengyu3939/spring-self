@@ -232,12 +232,13 @@ public class AnnotatedBeanDefinitionReader {
 		AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(beanClass);
 
 		//根据配置以及其附带的注解判断是否跳过这个配置类
+		//一般用法 通过 @Conditional(DemoClass) 标注被扫描的类，DemoClass 实现 Condition 并实现 matches 方法，来动态控制当前的类是否应该被加在
 		if (this.conditionEvaluator.shouldSkip(abd.getMetadata())) {
 			return;
 		}
 
 		abd.setInstanceSupplier(instanceSupplier);
-		//获取当前配置的模式，默认为单例模式
+		//获取当前配置的模式，默认为单例模式.
 		ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
 		abd.setScope(scopeMetadata.getScopeName());
 		//为当前bean初始化名称，如果方法有传就使用方法的，没有就解析注解（componet,named等注解中的value字段是否包含），在没有就解析shortClassName.
@@ -258,7 +259,7 @@ public class AnnotatedBeanDefinitionReader {
 			}
 		}
 
-		//后置处理器 作用于回调
+		//bean 定义的个性化定制器，用于改造bean
 		for (BeanDefinitionCustomizer customizer : definitionCustomizers) {
 			customizer.customize(abd);
 		}
