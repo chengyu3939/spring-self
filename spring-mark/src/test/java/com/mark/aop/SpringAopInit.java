@@ -8,6 +8,7 @@ public class SpringAopInit {
 		AnnotationConfigApplicationContext ac= new AnnotationConfigApplicationContext(TestConfig.class);
 		final Teacher bean = ac.getBean(Teacher.class);
 		bean.call();
+		bean.doSometing();
 
 
 	}

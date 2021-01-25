@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.aspectj', name:'aspectjweaver', version: '1.9.5'
     compile(project(":spring-context"))
     compile(project(":spring-core"))
     compile(project(":spring-web"))
@@ -21,6 +22,7 @@ dependencies {
     optional(project(":spring-core"))
     optional(project(":spring-messaging"))
     optional(project(":spring-aop"))
+
 
 //    optional(project(":spring-webmvc"))
 }
