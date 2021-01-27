@@ -26,6 +26,8 @@ public class DemoAspect {
 		final Object proceed = pjp.proceed();
 
 		final TestMock annotation = ((MethodSignature) pjp.getSignature()).getMethod().getAnnotation(TestMock.class);
+
+
 		final String value = annotation.value();
 		System.out.println("  ---value---"+ value);
 		System.out.println(pjp.getSignature().getName());

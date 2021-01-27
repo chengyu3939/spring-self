@@ -15,6 +15,9 @@ public class Teacher {
 	public void call() {
 		System.out.println("call");
 		student.test();
+
+		@TestMock
+		String str=new String("");
 	}
 	public void doSometing(){
 		System.out.println("do SomeThing");
