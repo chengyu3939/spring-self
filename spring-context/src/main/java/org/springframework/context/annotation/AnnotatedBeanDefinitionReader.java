@@ -246,7 +246,6 @@ public class AnnotatedBeanDefinitionReader {
 		//解析注解 lazy,primary,DependsOn,Role 等注解到abd中。
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
 
-		// TODO: 2020/2/21 限定符的作用
 		if (qualifiers != null) {
 			for (Class<? extends Annotation> qualifier : qualifiers) {
 				if (Primary.class == qualifier) {
@@ -263,9 +262,11 @@ public class AnnotatedBeanDefinitionReader {
 		for (BeanDefinitionCustomizer customizer : definitionCustomizers) {
 			customizer.customize(abd);
 		}
-
+		//将beanDefinition封装成holder
 		BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
+		//获取并设置与之关联的cope信息/ 包括 singleton/proxyType
 		definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
+		//将当前bean以及alias同时注册进容器中。
 		BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
 	}
 

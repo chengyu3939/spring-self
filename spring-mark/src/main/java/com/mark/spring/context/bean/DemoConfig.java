@@ -17,9 +17,9 @@ public class DemoConfig {
 		return new StudentService(2);
 	}
 
-	@Bean("student2-1")
-	public Student2Service init2(List<StudentService> studentService) {
-		System.out.println("----------" + studentService.size());
-		return new Student2Service();
-	}
+//	@Bean("student2-1")
+//	public Student2Service init2(List<StudentService> studentService) {
+//		System.out.println("----------" + studentService.size());
+//		return new Student2Service();
+//	}
 }

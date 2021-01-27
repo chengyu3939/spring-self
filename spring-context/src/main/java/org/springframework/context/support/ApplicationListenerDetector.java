@@ -43,6 +43,9 @@ import org.springframework.util.ObjectUtils;
  * @since 4.3.4
  *
  *
+ *
+ * 该PostProcessor 最后添加进
+ *
  * todo 需要理解 DestructionAwareBeanPostProcessor 以及 MergedBeanDefinitionPostProcessor
  */
 class ApplicationListenerDetector implements DestructionAwareBeanPostProcessor, MergedBeanDefinitionPostProcessor {
@@ -58,7 +61,7 @@ class ApplicationListenerDetector implements DestructionAwareBeanPostProcessor, 
 		this.applicationContext = applicationContext;
 	}
 
-
+//只为了将singletonNames填充满。
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
 		this.singletonNames.put(beanName, beanDefinition.isSingleton());
