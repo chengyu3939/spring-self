@@ -18,8 +18,11 @@ public class SpringInit {
 
 		System.out.println("main 方法线程"+Thread.currentThread().getName());
 
+
+		LookupDemo lookupDemo= (LookupDemo) ac.getBean("lookupDemo");
+		Student3Service service = lookupDemo.getService();
 		Student3Service studentService = (Student3Service) ac.getBean("student3Service");
-		Student3Service studentService2 = (Student3Service) ac.getBean("student3Service");
+		Student2Service studentService2 = (Student2Service) ac.getBean("student2Service");
 		Student3Service studentService3 = (Student3Service) ac.getBean("student3Service");
 
 		System.out.println(studentService);

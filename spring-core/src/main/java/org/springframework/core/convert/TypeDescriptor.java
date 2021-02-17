@@ -86,6 +86,7 @@ public class TypeDescriptor implements Serializable {
 		this.type = this.resolvableType.resolve(methodParameter.getNestedParameterType());
 		this.annotatedElement = new AnnotatedElementAdapter(methodParameter.getParameterIndex() == -1 ?
 				methodParameter.getMethodAnnotations() : methodParameter.getParameterAnnotations());
+
 	}
 
 	/**
