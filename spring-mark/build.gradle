@@ -22,7 +22,7 @@ dependencies {
     optional(project(":spring-core"))
     optional(project(":spring-messaging"))
     optional(project(":spring-aop"))
-
+    testCompile group: 'nl.flotsam', name: 'xeger', version: '1.0.0-lorislab-1'
 
 //    optional(project(":spring-webmvc"))
 }

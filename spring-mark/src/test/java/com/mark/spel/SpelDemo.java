@@ -30,8 +30,8 @@ public class SpelDemo {
 		studentServiceDemo.setName("zhangsan");
 
 		ExpressionParser parser = new SpelExpressionParser();
-		final Expression hello_world = parser.parseExpression("studentServiceDemo.getName()");
-		final Object value = hello_world.getValue();
+		final Expression hello_world = parser.parseExpression("name");
+		final Object value = hello_world.getValue(studentServiceDemo);
 		System.out.println(value);
 	}
 }

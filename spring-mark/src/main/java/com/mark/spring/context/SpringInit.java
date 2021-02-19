@@ -6,6 +6,14 @@ import com.mark.spring.context.event.MonitorEnums;
 import com.mark.spring.context.event.MonitorEvent;
 import com.mark.spring.context.lifecycle.AppConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.expression.BeanFactoryAccessor;
+import org.springframework.context.expression.BeanFactoryResolver;
+import org.springframework.expression.BeanResolver;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.ParserContext;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +24,10 @@ public class SpringInit {
 //		System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY,"/Users/mark/Desktop");
 		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig.class);
 
-		System.out.println("main 方法线程"+Thread.currentThread().getName());
+		System.out.println("main 方法线程" + Thread.currentThread().getName());
 
 
-		LookupDemo lookupDemo= (LookupDemo) ac.getBean("lookupDemo");
+		LookupDemo lookupDemo = (LookupDemo) ac.getBean("lookupDemo");
 		Student3Service service = lookupDemo.getService();
 		Student3Service studentService = (Student3Service) ac.getBean("student3Service");
 		Student2Service studentService2 = (Student2Service) ac.getBean("student2Service");
@@ -40,14 +48,23 @@ public class SpringInit {
 
 
 		//ac.publishEvent(new ApplicationEvent(new String("我发布了一个时间！")){});
-		ac.publishEvent(new MonitorEvent(MonitorEnums.POOL_FAIL,"测试发布时间哦！"){});
+		ac.publishEvent(new MonitorEvent(MonitorEnums.POOL_FAIL, "测试发布时间哦！") {
+		});
 
+
+		ExpressionParser expressionParser = new SpelExpressionParser();
+
+		StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
+		evaluationContext.addPropertyAccessor(new BeanFactoryAccessor());
+
+
+		evaluationContext.setBeanResolver(new BeanFactoryResolver(ac.getBeanFactory()));
+		System.out.println(expressionParser.parseExpression("this a #{@testService.getCount()}", ParserContext.TEMPLATE_EXPRESSION).getValue(evaluationContext));
 //		EventPublisher.publisher(MonitorEnums.POOL_FAIL,"22222222");
 
 //		runtime(ac);
 //		ac.publishEvent("xxxxx");
 //		System.in.read();
-
 
 
 //		ac.registerBean();
@@ -66,10 +83,10 @@ public class SpringInit {
 
 
 		Process ll = Runtime.getRuntime().exec("ls");
-		InputStream input=ll.getInputStream();
+		InputStream input = ll.getInputStream();
 		StringBuffer out = new StringBuffer();
 		byte[] b = new byte[4096];
-		for (int n; (n = input.read(b)) != -1;) {
+		for (int n; (n = input.read(b)) != -1; ) {
 			out.append(new String(b, 0, n));
 		}
 		System.out.println(out.toString());
