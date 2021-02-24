@@ -33,13 +33,7 @@ public class ApplicationContextInit {
 		});
 
 
-		ac.addBeanFactoryPostProcessor(new BeanFactoryPostProcessor() {
-			@Override
-			public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-
-				System.out.println("beanFactoryPostProcessor be call!");
-			}
-		});
+		ac.addBeanFactoryPostProcessor(beanFactory -> System.out.println("beanFactoryPostProcessor be call!"));
 
 
 		ac.registerBean(DemoApplicationContextAware.class);
