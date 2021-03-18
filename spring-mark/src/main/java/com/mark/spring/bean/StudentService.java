@@ -1,4 +1,4 @@
-package com.mark.spring.context;
+package com.mark.spring.bean;
 
 import org.springframework.stereotype.Component;
 
@@ -7,13 +7,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component("testService")
 public class StudentService {
 
-	private static AtomicInteger number=new AtomicInteger(0);
+	private static AtomicInteger number = new AtomicInteger(0);
 
 	private Integer count;
 
 	public StudentService() {
 
-		System.out.println("studentservice null args be call!"+number.getAndAdd(1));
+		System.out.println("studentservice null args be call!" + number.getAndAdd(1));
 	}
 
 	public StudentService(Integer count) {
@@ -22,8 +22,9 @@ public class StudentService {
 		this.count = count;
 	}
 
-	public void say(){
+	public String say() {
 		System.out.println("student say!");
+		return " 原始数据";
 	}
 
 	public Integer getCount() {

@@ -1,6 +1,5 @@
 package com.mark.spring.context.lifecycle;
 
-import com.mark.spring.context.StudentService;
 import com.mark.spring.context.bean.DemoConfig;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -14,13 +13,9 @@ import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.util.ErrorHandler;
-
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.ThreadPoolExecutor;
 
 @Configuration
-@ComponentScan(basePackages = "com.mark.spring.context")
+@ComponentScan(basePackages = "com.mark.spring")
 @EnableAsync
 @Import(DemoConfig.class)
 public class AppConfig implements ApplicationContextAware {

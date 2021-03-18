@@ -3,7 +3,9 @@ package com.mark.spring.context.event;
 
 import org.springframework.context.ApplicationEvent;
 
-public class MonitorEvent extends ApplicationEvent {
+import java.io.Serializable;
+
+public class MonitorEvent extends ApplicationEvent implements Serializable {
 
 	private MonitorEnums monitorEnums;
 

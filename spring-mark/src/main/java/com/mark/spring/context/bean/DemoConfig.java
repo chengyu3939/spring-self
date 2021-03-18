@@ -1,6 +1,6 @@
 package com.mark.spring.context.bean;
 
-import com.mark.spring.context.StudentService;
+import com.mark.spring.bean.StudentService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -1,4 +1,4 @@
-package com.mark.spring.context;
+package com.mark.spring.bean;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

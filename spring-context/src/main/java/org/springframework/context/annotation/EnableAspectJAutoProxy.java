@@ -42,7 +42,7 @@ import java.lang.annotation.Target;
  *         return new MyAspect();
  *     }
  * }</pre>
- *
+ * <p>
  * Where {@code FooService} is a typical POJO component and {@code MyAspect} is an
  * {@code @Aspect}-style aspect:
  *
@@ -61,7 +61,7 @@ import java.lang.annotation.Target;
  *         // advise FooService methods as appropriate
  *     }
  * }</pre>
- *
+ * <p>
  * In the scenario above, {@code @EnableAspectJAutoProxy} ensures that {@code MyAspect}
  * will be properly processed and that {@code FooService} will be proxied mixing in the
  * advice that it contributes.
@@ -89,7 +89,7 @@ import java.lang.annotation.Target;
  * &#064;Aspect
  * &#064;Component
  * public class MyAspect { ... }</pre>
- *
+ * <p>
  * Then use the @{@link ComponentScan} annotation to pick both up:
  *
  * <pre class="code">
@@ -113,8 +113,8 @@ import java.lang.annotation.Target;
  *
  * @author Chris Beams
  * @author Juergen Hoeller
- * @since 3.1
  * @see org.aspectj.lang.annotation.Aspect
+ * @since 3.1
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -129,9 +129,16 @@ public @interface EnableAspectJAutoProxy {
 	boolean proxyTargetClass() default false;
 
 	/**
+	 * 默认情况下：代理类进行自身方法调用，默认是通过this调用。所以拦截器的拦截只会触发当前方法。其进行自身调用的动作则不会触碰aop的拦截逻辑
+	 * <p>
+	 * 此处可以通过 设置  exposeProxy=true 来达到自身调用也能触发aop的效果。
+	 * <p>
+	 * 其核心为 ThreadLocal 存储代理对象（执行的目标对象）执行方法会从 缓存中重新获取代理对象
+	 * <p>
 	 * Indicate that the proxy should be exposed by the AOP framework as a {@code ThreadLocal}
 	 * for retrieval via the {@link org.springframework.aop.framework.AopContext} class.
 	 * Off by default, i.e. no guarantees that {@code AopContext} access will work.
+	 *
 	 * @since 4.3.1
 	 */
 	boolean exposeProxy() default false;
